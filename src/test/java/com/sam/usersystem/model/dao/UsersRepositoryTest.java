@@ -1,5 +1,6 @@
 package com.sam.usersystem.model.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -12,15 +13,15 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import com.sam.usersystem.model.UsersBean;
 
-public class UsersDAOMongoTest {
+public class UsersRepositoryTest {
 	private ApplicationContext context;
-	private UsersDAO usersDAO;
+	private UsersRepository usersRepository;
 	
 	@Before
 	public void init() {
 		context = new AnnotationConfigApplicationContext(com.sam.usersystem.config.SpringJavaConfig.class);
 		
-		usersDAO = (UsersDAO) context.getBean("usersDAOMongo");
+		usersRepository = (UsersRepository) context.getBean("usersRepository");
 		
 	}
 	
@@ -28,17 +29,18 @@ public class UsersDAOMongoTest {
 	public void insert() {
 		
 		UsersBean bean = new UsersBean();
-		String userID = "abc10327";
-		String userName = "Sam3";
+		String userID = "abc10325";
+		String userName = "sam1";
 		String pwd = "abc9814016";
 		
+		bean.setNo(Integer.valueOf((int)(usersRepository.count() + 1)));
 		bean.setUserID(userID);
 		bean.setPwd(pwd);
 		bean.setUserName(userName);
 		
 		UsersBean result = null;
 		
-		result = usersDAO.insert(bean);
+		result = usersRepository.insert(bean);
 		
 		
 		if(result != null) {
@@ -52,11 +54,11 @@ public class UsersDAOMongoTest {
 	
 	@Test
 	public void selectById() {
-		String userID = "abc10324";
+		String userID = "abc10382";
 //		String userID = "abc9814016";
 		
 		UsersBean result = null;
-		result = usersDAO.selectById(userID);
+		result = usersRepository.selectById(userID);
 		
 		if(result != null) {
 			System.out.println(result);
@@ -67,11 +69,11 @@ public class UsersDAOMongoTest {
 	
 	@Test
 	public void selectByName() {
-		String userName = "Sam";
-//		String userName = "Jenny";
+//		String userName = "Sam";
+		String userName = "Jade";
 		
 		UsersBean result = null;
-		result = usersDAO.selectByName(userName);
+		result = usersRepository.selectByName(userName);
 		
 		if(result != null) {
 			System.out.println(result);
@@ -85,8 +87,12 @@ public class UsersDAOMongoTest {
 		String userName = "Sam";
 //		String userName = "Jenny";
 		
-		List<String> result = null;
-		result = usersDAO.selectLikeName(userName);
+		List<UsersBean> beanList = usersRepository.selectLikeName(userName);
+		List<String> result = new ArrayList<>();
+		
+		for(UsersBean bean : beanList) {
+			result.add(bean.getUserName());
+		}
 		
 		if(result.size() != 0) {
 			for(String resultUserName : result) {

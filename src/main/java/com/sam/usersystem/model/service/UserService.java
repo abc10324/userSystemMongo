@@ -8,27 +8,27 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.sam.usersystem.model.UsersBean;
-import com.sam.usersystem.model.dao.UsersDAO;
+import com.sam.usersystem.model.dao.UsersRepository;
 
 @Service
 public class UserService {
 	@Autowired
-	private UsersDAO usersDAO;
+	private UsersRepository usersRepository;
 	
 	public Map<String,String> regist(UsersBean bean) {
 		
 		Map<String,String> map = new HashMap<>();
 		
 		// check is this ID exist
-		if(usersDAO.selectById(bean.getUserID()) == null) {
+		if(usersRepository.selectById(bean.getUserID()) == null) {
 			
 			// check is this Name exist
-			if(usersDAO.selectByName(bean.getUserName()) == null) {
+			if(usersRepository.selectByName(bean.getUserName()) == null) {
 				// insert this data
-				UsersBean result = usersDAO.insert(bean);
+				bean.setNo(Integer.valueOf((int)(usersRepository.count() + 1)));
+				UsersBean result = usersRepository.insert(bean);
 				
 				if(result != null) {
 					map.put("userId",bean.getUserID());
@@ -47,7 +47,8 @@ public class UserService {
 				bean.setUserName(newUserName);
 				
 				// insert this data
-				UsersBean result = usersDAO.insert(bean);
+				bean.setNo(Integer.valueOf((int)(usersRepository.count() + 1)));
+				UsersBean result = usersRepository.insert(bean);
 				
 				if(result != null) {
 					map.put("userId",bean.getUserID());
@@ -73,8 +74,13 @@ public class UserService {
 		String newUserName = userName;
 		
 		
-		List<String> list = usersDAO.selectLikeName(userName);
-
+		List<UsersBean> beanList = usersRepository.selectLikeName(userName);
+		List<String> list = new ArrayList<>();
+		
+		for(UsersBean bean : beanList) {
+			list.add(bean.getUserName());
+		}
+		
 		// substring to get following numbers
 		// filter for not a number
 		List<Integer> filteredList = new ArrayList();
