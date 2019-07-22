@@ -27,8 +27,7 @@ public class UserService {
 			// check is this Name exist
 			if(usersRepository.selectByName(bean.getUserName()) == null) {
 				// insert this data
-				bean.setNo(Integer.valueOf((int)(usersRepository.count() + 1)));
-				UsersBean result = usersRepository.insert(bean);
+				UsersBean result = usersRepository.insertWithAutoGenNo(bean);
 				
 				if(result != null) {
 					map.put("userId",bean.getUserID());
@@ -47,8 +46,7 @@ public class UserService {
 				bean.setUserName(newUserName);
 				
 				// insert this data
-				bean.setNo(Integer.valueOf((int)(usersRepository.count() + 1)));
-				UsersBean result = usersRepository.insert(bean);
+				UsersBean result = usersRepository.insertWithAutoGenNo(bean);
 				
 				if(result != null) {
 					map.put("userId",bean.getUserID());

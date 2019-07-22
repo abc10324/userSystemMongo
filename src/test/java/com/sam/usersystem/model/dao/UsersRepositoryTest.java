@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import com.sam.usersystem.model.UsersBean;
 
@@ -41,6 +43,32 @@ public class UsersRepositoryTest {
 		UsersBean result = null;
 		
 		result = usersRepository.insert(bean);
+		
+		
+		if(result != null) {
+			System.out.println(result);
+		} else {
+			System.out.println("Insert fail");
+		}
+		
+	}
+	
+	@Test
+	public void insertWithAutoGenNo() {
+		
+		UsersBean bean = new UsersBean();
+		String userID = "abc10327";
+		String userName = "Sam6";
+		String pwd = "abc9814016";
+		
+		bean.setNo(Integer.valueOf((int)(usersRepository.count() + 1)));
+		bean.setUserID(userID);
+		bean.setPwd(pwd);
+		bean.setUserName(userName);
+		
+		UsersBean result = null;
+		
+		result = usersRepository.insertWithAutoGenNo(bean);
 		
 		
 		if(result != null) {
@@ -88,6 +116,27 @@ public class UsersRepositoryTest {
 //		String userName = "Jenny";
 		
 		List<UsersBean> beanList = usersRepository.selectLikeName(userName);
+		List<String> result = new ArrayList<>();
+		
+		for(UsersBean bean : beanList) {
+			result.add(bean.getUserName());
+		}
+		
+		if(result.size() != 0) {
+			for(String resultUserName : result) {
+				System.out.println(resultUserName);
+			}
+		} else {
+			System.out.println("No Result");
+		}
+	}
+	
+	@Test
+	public void selectLikeNameWithPagination() {
+		String userName = "Sam";
+//		String userName = "Jenny";
+		
+		List<UsersBean> beanList = usersRepository.selectLikeName(userName,PageRequest.of(0, 2, Sort.Direction.ASC, "no"));
 		List<String> result = new ArrayList<>();
 		
 		for(UsersBean bean : beanList) {
