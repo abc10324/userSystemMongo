@@ -54,11 +54,18 @@ public class UsersRepositoryTest {
 	}
 	
 	@Test
+	public void getMaxNo() {
+		UsersBean bean = usersRepository.findFirstByOrderByNoDesc();
+		
+		System.out.println(bean == null ? "No result" : bean.getNo());
+	}
+	
+	@Test
 	public void insertWithAutoGenNo() {
 		
 		UsersBean bean = new UsersBean();
-		String userID = "abc10327";
-		String userName = "Sam6";
+		String userID = "abc10325";
+		String userName = "Sam3";
 		String pwd = "abc9814016";
 		
 		bean.setNo(Integer.valueOf((int)(usersRepository.count() + 1)));

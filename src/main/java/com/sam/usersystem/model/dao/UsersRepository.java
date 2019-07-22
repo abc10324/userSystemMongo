@@ -3,7 +3,6 @@ package com.sam.usersystem.model.dao;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,10 +24,15 @@ public interface UsersRepository extends MongoRepository<UsersBean, String> {
 	@Query("{'userName' : {$regex : '^?0.*$' , $options: 'i'} }")
 	public List<UsersBean> selectLikeName(String userName,Pageable pageable);
 	
+	public UsersBean findFirstByOrderByNoDesc();
+	
+	/* this default method syntax only for java 8 above
+	 * java 7 is not allowed
+	*/ 
 	default UsersBean insertWithAutoGenNo(UsersBean bean) {
-		List<UsersBean> list = findAll(Sort.by(Sort.Direction.DESC, "no"));
+		UsersBean result = findFirstByOrderByNoDesc();
 
-		bean.setNo(list.size() == 0 ? 1 : list.get(0).getNo() + 1);
+		bean.setNo(result == null ? 1 : result.getNo() + 1);
 		
 		try {
 			insert(bean);
