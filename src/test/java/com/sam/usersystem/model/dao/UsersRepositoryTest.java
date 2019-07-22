@@ -104,11 +104,12 @@ public class UsersRepositoryTest {
 	
 	@Test
 	public void selectByName() {
-//		String userName = "Sam";
-		String userName = "Jade";
+		String userName = "SAm";
+//		String userName = "Jade";
 		
 		UsersBean result = null;
-		result = usersRepository.selectByName(userName);
+//		result = usersRepository.selectByName(userName);
+		result = usersRepository.queryByUserNameIgnoreCase(userName);
 		
 		if(result != null) {
 			System.out.println(result);
@@ -119,10 +120,11 @@ public class UsersRepositoryTest {
 	
 	@Test
 	public void selectLikeName() {
-		String userName = "Sam";
+		String userName = "SAm";
 //		String userName = "Jenny";
 		
-		List<UsersBean> beanList = usersRepository.selectLikeName(userName);
+//		List<UsersBean> beanList = usersRepository.selectLikeName(userName);
+		List<UsersBean> beanList = usersRepository.queryByUserNameStartsWithIgnoreCase(userName);
 		List<String> result = new ArrayList<>();
 		
 		for(UsersBean bean : beanList) {

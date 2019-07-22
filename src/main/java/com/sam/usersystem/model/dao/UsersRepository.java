@@ -18,8 +18,12 @@ public interface UsersRepository extends MongoRepository<UsersBean, String> {
 	@Query("{'userName' : {$regex : '^?0$' , $options: 'i'} }")
 	public UsersBean selectByName(String userName);
 	
+	public UsersBean queryByUserNameIgnoreCase(String userName);
+	
 	@Query("{'userName' : {$regex : '^?0.*$' , $options: 'i'} }")
 	public List<UsersBean> selectLikeName(String userName);
+	
+	public List<UsersBean> queryByUserNameStartsWithIgnoreCase(String userName);
 	
 	@Query("{'userName' : {$regex : '^?0.*$' , $options: 'i'} }")
 	public List<UsersBean> selectLikeName(String userName,Pageable pageable);
